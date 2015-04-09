@@ -27,3 +27,13 @@ build/Release
 node_modules
 
 .idea
+
+# Visual Studio files
+
+*.sln
+*.suo
+*.njsproj
+
+# JavaScript symbol cache
+
+.ntvs_analysis.dat
