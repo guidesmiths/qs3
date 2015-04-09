@@ -2,7 +2,7 @@
 A library for publishing amqp messages to s3
 
 The aim is to have the ability to allow persisting data to S3 on a simple way: you submit a message to a 
-RabbitMQ exchange/query.
+RabbitMQ exchange/queue.
 
 Secondary objective is to have a facility that logs every messages received by an exchange, potentially logging messages
 that would otherwise be lost.
