@@ -69,7 +69,8 @@ describe('uploadToS3', function() {
             },
             qs3: {
                 s3id: getS3Id(this.test)
-            }
+            },
+            content: crypto.pseudoRandomBytes(10).toString('hex')
         }
 
         uploadToS3({
@@ -96,14 +97,13 @@ describe('uploadToS3', function() {
             },
             qs3: {
                 s3id: getS3Id(this.test)
-            }
+            },
+            content: crypto.pseudoRandomBytes(10).toString('hex')
         }
 
-        var content = crypto.pseudoRandomBytes(10).toString('hex')
-
-        uploadToS3(config, message, function(err, middleware) {
+        uploadToS3(config, {}, function(err, middleware) {
             assert.ifError(err)
-            middleware(message, content, function(err) {
+            middleware(message, 'content', function(err) {
                 assert.ifError(err)
                 s3.getClient(config.region).getObject({
                     Bucket: config.bucket,
@@ -112,7 +112,7 @@ describe('uploadToS3', function() {
                     assert.ifError(err)
                     assert.equal(res.ContentDisposition, 'attachment; filename=foo.txt')
                     assert.equal(res.ContentType, 'text/plain')
-                    assert.equal(res.Body.toString(), content)
+                    assert.equal(res.Body.toString(), message.content)
                     done()
                 })
             })

@@ -2,18 +2,11 @@
     "qs3": {
         "routes": {
             "book_loan_v1": {
-                "sequence": ["messageToTemplateVars", "messageTimestampToTemplateVars", "routingKeyToPath", "messageToS3Id", "uploadToS3"],
+                "sequence": ["messageToTemplateVars", "routingKeyToPath", "messageToS3id", "uploadToS3"],
                 "warez": {
-                    "messageTimestampToTemplateVars": {
+                    "messageToS3id": {
                         "options": {
-                            "source": "/properties/headers/timestamp",
-                            "destination": "timestamp",
-                            "template": "YYYY/MM/DD"
-                        }
-                    },
-                    "messageToS3Id": {
-                        "options": {
-                            "template": "{{timestamp}}/library/v1/books/loan_created/{{message.properties.messageId}}.json"
+                            "template": "{{path}}/{{message.properties.messageId}}.json"
                         }
                     },
                     "uploadToS3": {
@@ -25,7 +18,7 @@
                 }
             },
             "book_loan_v2": {
-                "sequence": ["messageToTemplateVars", "messageTimestampToTemplateVars", "contentDispositionToTemplateVars", "messageToS3Id", "uploadToS3"],
+                "sequence": ["messageToTemplateVars", "messageTimestampToTemplateVars", "messageToS3id", "uploadToS3"],
                 "warez": {
                     "messageTimestampToTemplateVars": {
                         "options": {
@@ -34,9 +27,25 @@
                             "template": "YYYY/MM/DD"
                         }
                     },
-                    "messageToS3Id": {
+                    "messageToS3id": {
                         "options": {
-                            "template": "loans/{{timestamp}}/{{contentDisposition.filename}}"
+                            "template": "library/{{timestamp}}/{{message.properties.messageId}}.json"
+                        }
+                    },
+                    "uploadToS3": {
+                        "options": {
+                            "region": "eu-west-1",
+                            "bucket": "qs3-tests"
+                        }
+                    }
+                }
+            },
+            "book_loan_v3": {
+                "sequence": ["messageToTemplateVars", "contentDispositionToTemplateVars", "messageToS3id", "uploadToS3"],
+                "warez": {
+                    "messageToS3id": {
+                        "options": {
+                            "template": "library/{{contentDisposition.filename}}"
                         }
                     },
                     "uploadToS3": {
