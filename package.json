@@ -1,6 +1,6 @@
 {
   "name": "qsftp",
-  "version": "0.2.6",
+  "version": "0.1.0",
   "description": "An amqp to sftp relay",
   "main": "index.js",
   "scripts": {
