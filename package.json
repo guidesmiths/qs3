@@ -1,5 +1,5 @@
 {
-  "name": "qsftp",
+  "name": "qs3",
   "version": "0.1.0",
   "description": "An amqp to sftp relay",
   "main": "index.js",
@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/guidesmiths/qsftp.git"
+    "url": "https://github.com/guidesmiths/qs3.git"
   },
   "keywords": [
     "amqp",
@@ -19,9 +19,9 @@
   "author": "Stephen Cresswell",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/guidesmiths/qsftp/issues"
+    "url": "https://github.com/guidesmiths/qs3/issues"
   },
-  "homepage": "https://github.com/guidesmiths/qsftp",
+  "homepage": "https://github.com/guidesmiths/qs3",
   "devDependencies": {
     "chalk": "^1.0.0",
     "fs-extra": "^0.18.1",
