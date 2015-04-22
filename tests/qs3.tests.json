@@ -1,0 +1,100 @@
+{
+    "qs3": {
+        "routes": {
+            "book_loan_v1": {
+                "sequence": ["messageToTemplateVars", "messageTimestampToTemplateVars", "routingKeyToPath", "messageToS3Id", "uploadToS3"],
+                "warez": {
+                    "messageTimestampToTemplateVars": {
+                        "options": {
+                            "source": "/properties/headers/timestamp",
+                            "destination": "timestamp",
+                            "template": "YYYY/MM/DD"
+                        }
+                    },
+                    "messageToS3Id": {
+                        "options": {
+                            "template": "{{timestamp}}/library/v1/books/loan_created/{{message.properties.messageId}}.json"
+                        }
+                    },
+                    "uploadToS3": {
+                        "options": {
+                            "region": "eu-west-1",
+                            "bucket": "qs3-tests"
+                        }
+                    }
+                }
+            },
+            "book_loan_v2": {
+                "sequence": ["messageToTemplateVars", "messageTimestampToTemplateVars", "contentDispositionToTemplateVars", "messageToS3Id", "uploadToS3"],
+                "warez": {
+                    "messageTimestampToTemplateVars": {
+                        "options": {
+                            "source": "/properties/headers/timestamp",
+                            "destination": "timestamp",
+                            "template": "YYYY/MM/DD"
+                        }
+                    },
+                    "messageToS3Id": {
+                        "options": {
+                            "template": "loans/{{timestamp}}/{{contentDisposition.filename}}"
+                        }
+                    },
+                    "uploadToS3": {
+                        "options": {
+                            "region": "eu-west-1",
+                            "bucket": "qs3-tests"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "rascal": {
+        "vhosts": {
+            "/": {
+                "namespace": true,
+                "exchanges": {
+                    "e1": {}
+                },
+                "queues": {
+                    "q1": {},
+                    "q2": {},
+                    "q3": {}
+                },
+                "bindings": {
+                    "b1": {
+                        "source": "e1",
+                        "destination": "q1",
+                        "bindingKey": "library.v1.#"
+                    },
+                    "b2": {
+                        "source": "e1",
+                        "destination": "q2",
+                        "bindingKey": "library.v2.#"
+                    },
+                    "b3": {
+                        "source": "e1",
+                        "destination": "q3",
+                        "bindingKey": "library.v3.#"
+                    }
+                }
+            }
+        },
+        "publications": {
+            "p1": {
+                "exchange": "e1"
+            }
+        },
+        "subscriptions": {
+            "s1": {
+                "queue": "q1"
+            },
+            "s2": {
+                "queue": "q2"
+            },
+            "s3": {
+                "queue": "q3"
+            }
+        }
+    }
+}

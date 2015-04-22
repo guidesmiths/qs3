@@ -1,0 +1,43 @@
+{
+  "name": "qsftp",
+  "version": "0.2.6",
+  "description": "An amqp to sftp relay",
+  "main": "index.js",
+  "scripts": {
+    "up": "docker-compose up -d",
+    "test": "AWS_PROFILE=guidesmiths mocha --recursive tests",
+    "example": "node examples/server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/guidesmiths/qsftp.git"
+  },
+  "keywords": [
+    "amqp",
+    "sftp"
+  ],
+  "author": "Stephen Cresswell",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/guidesmiths/qsftp/issues"
+  },
+  "homepage": "https://github.com/guidesmiths/qsftp",
+  "devDependencies": {
+    "chalk": "^1.0.0",
+    "fs-extra": "^0.18.1",
+    "mocha": "^2.2.4",
+    "request": "^2.55.0",
+    "ware": "^1.2.0"
+  },
+  "dependencies": {
+    "async": "^0.9.0",
+    "content-disposition": "^0.5.0",
+    "debug": "^2.1.3",
+    "hogan.js": "^3.0.2",
+    "jsonpointer": "^1.1.0",
+    "lodash": "^3.6.0",
+    "moment": "^2.10.2",
+    "rascal": "^0.3.6",
+    "aws-sdk": "^2.1.23"
+  }
+}

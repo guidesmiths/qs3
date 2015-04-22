@@ -1,26 +1,27 @@
-/**
- * Created by Peter on 4/9/2015.
- */
+'use strict'
 
-var assert = require('assert');
-var AWS = require('aws-sdk');
+var debug = require('debug')('qs3:index')
+var format = require('util').format
+var _ = require('lodash')
+var async = require('async')
+var url = require('url')
+var warez = require('./lib/warez')
+var configure = require('./lib/config/configure')
 
+module.exports = {
+    init: init,
+    warez: warez
+}
 
-AWS.config.region = 'eu-west-1';
+function init(config, ctx, next) {
+    if (arguments.length === 2) return init(config, {}, arguments[2])
+    ctx.warez = _.defaults(ctx.warez || {}, warez)
 
-
-var s3bucket = new AWS.S3({ params: { Bucket: 'gs-test-field' } });
-
-s3bucket.createBucket(function () {
-    var params = { Key: 'myKey', Body: 'Hello!' };
-    s3bucket.upload(params, function (err, data) {
-        if (err) {
-            console.log("Error uploading data: ", err);
-        } else {
-            console.log("Successfully uploaded data to myBucket/myKey");
-        }
-    });
-});
-
-
-//https://github.com/tes/service-payment-daily-export/blob/master/src/fileRepo.js
+    configure(config, function(err, routeConfig) {
+        if (err) return next(err)
+        async.mapSeries(routeConfig.sequence, function(id, callback) {
+            var warezConfig = routeConfig.warez[id]
+            ctx.warez[warezConfig.type](warezConfig.options || {}, ctx, callback)
+        }, next)
+    })
+}
