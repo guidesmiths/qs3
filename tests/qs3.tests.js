@@ -46,12 +46,14 @@ describe('qs3', function() {
             text: crypto.pseudoRandomBytes(10).toString('hex')
         }
 
-        broker.publish('p1', content, 'library.v1.book.978-3-16-148410-0.loan.created' , function(err, messageId) {
+        broker.publish('p1', content, 'library.v1.book.978-3-16-148410-0.loan.created' , function(err, publication) {
             assert.ifError(err)
 
-            broker.subscribe('s1', function(err, message, content) {
-                middleware.run(message, content, function(err, message, content) {
-                    assert.ifError(err)
+            broker.subscribe('s1', function(err, subscription) {
+                subscription.on('message', function(message, content) {
+                    middleware.run(message, content, function(err, message, content) {
+                        assert.ifError(err)
+                    })
                 })
             })
 
@@ -87,12 +89,14 @@ describe('qs3', function() {
                     timestamp: 1429550153167
                 }
             }
-        }, function(err, messageId) {
+        }, function(err, publication) {
             assert.ifError(err)
 
-            broker.subscribe('s2', function(err, message, content) {
-                middleware.run(message, content, function(err, message, content) {
-                    assert.ifError(err)
+            broker.subscribe('s2', function(err, subscription) {
+                subscription.on('message', function(message, content) {
+                    middleware.run(message, content, function(err, message, content) {
+                        assert.ifError(err)
+                    })
                 })
             })
 
@@ -127,12 +131,14 @@ describe('qs3', function() {
                     contentDisposition: 'attachment; filename="978-3-16-148410-0.json"'
                 }
             }
-        }, function(err, messageId) {
+        }, function(err, publication) {
             assert.ifError(err)
 
-            broker.subscribe('s3', function(err, message, content) {
-                middleware.run(message, content, function(err, message, content) {
-                    assert.ifError(err)
+            broker.subscribe('s3', function(err, subscription) {
+                subscription.on('message', function(message, content) {
+                    middleware.run(message, content, function(err, message, content) {
+                        assert.ifError(err)
+                    })
                 })
             })
 

@@ -2,9 +2,9 @@
     "qs3": {
         "routes": {
             "book_loan_v1": {
-                "sequence": ["messageToTemplateVars", "routingKeyToPath", "messageToS3id", "uploadToS3"],
+                "sequence": ["messageToTemplateVars", "routingKeyToPath", "messageToS3Id", "uploadToS3"],
                 "warez": {
-                    "messageToS3id": {
+                    "messageToS3Id": {
                         "options": {
                             "template": "{{path}}/{{message.properties.messageId}}.json"
                         }
@@ -18,7 +18,7 @@
                 }
             },
             "book_loan_v2": {
-                "sequence": ["messageToTemplateVars", "messageTimestampToTemplateVars", "messageToS3id", "uploadToS3"],
+                "sequence": ["messageToTemplateVars", "messageTimestampToTemplateVars", "messageToS3Id", "uploadToS3"],
                 "warez": {
                     "messageTimestampToTemplateVars": {
                         "options": {
@@ -27,7 +27,7 @@
                             "template": "YYYY/MM/DD"
                         }
                     },
-                    "messageToS3id": {
+                    "messageToS3Id": {
                         "options": {
                             "template": "library/{{timestamp}}/{{message.properties.messageId}}.json"
                         }
@@ -41,9 +41,9 @@
                 }
             },
             "book_loan_v3": {
-                "sequence": ["messageToTemplateVars", "contentDispositionToTemplateVars", "messageToS3id", "uploadToS3"],
+                "sequence": ["messageToTemplateVars", "contentDispositionToTemplateVars", "messageToS3Id", "uploadToS3"],
                 "warez": {
-                    "messageToS3id": {
+                    "messageToS3Id": {
                         "options": {
                             "template": "library/{{contentDisposition.filename}}"
                         }
