@@ -37,7 +37,7 @@
     "jsonpointer": "^1.1.0",
     "lodash": "^3.6.0",
     "moment": "^2.10.2",
-    "rascal": "^0.4.1",
+    "rascal": "^0.4.2",
     "aws-sdk": "^2.1.23"
   }
 }
