@@ -23,7 +23,7 @@ function init(config, ctx, next) {
             var warezConfig = routeConfig.warez[id]
             var ware = ctx.warez[warezConfig.type]
             if (!ware) return callback(new Error(format('%s ware is was not found', warezConfig.type)))
-            ctx.warez[warezConfig.type](warezConfig.options || {}, ctx, callback)
+            ware(warezConfig.options || {}, ctx, callback)
         }, next)
     })
 }
