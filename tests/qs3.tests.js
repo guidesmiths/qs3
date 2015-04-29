@@ -51,7 +51,7 @@ describe('qs3', function() {
 
             broker.subscribe('s1', function(err, subscription) {
                 subscription.on('message', function(message, content) {
-                    middleware.run(message, content, function(err, message, content) {
+                    middleware.run({}, message, content, function(err) {
                         assert.ifError(err)
                     })
                 })
@@ -64,7 +64,7 @@ describe('qs3', function() {
                 })
             })
 
-            middleware.use(function(message, content) {
+            middleware.use(function(flowScope, message, content) {
                 download(format('library/v1/book/978-3-16-148410-0/loan/created/%s.json', message.properties.messageId), function(err, uploadedContent) {
                     assert.ifError(err)
                     assert.equal(uploadedContent.text, content.text)
@@ -94,7 +94,7 @@ describe('qs3', function() {
 
             broker.subscribe('s2', function(err, subscription) {
                 subscription.on('message', function(message, content) {
-                    middleware.run(message, content, function(err, message, content) {
+                    middleware.run({}, message, content, function(err, message, content) {
                         assert.ifError(err)
                     })
                 })
@@ -107,7 +107,7 @@ describe('qs3', function() {
                 })
             })
 
-            middleware.use(function(message, content) {
+            middleware.use(function(flowScope, message, content) {
                 download(format('library/2015/04/20/%s.json', message.properties.messageId), function(err, uploadedContent) {
                     assert.ifError(err)
                     assert.equal(uploadedContent.text, content.text)
@@ -136,7 +136,7 @@ describe('qs3', function() {
 
             broker.subscribe('s3', function(err, subscription) {
                 subscription.on('message', function(message, content) {
-                    middleware.run(message, content, function(err, message, content) {
+                    middleware.run({}, message, content, function(err, message, content) {
                         assert.ifError(err)
                     })
                 })
@@ -149,7 +149,7 @@ describe('qs3', function() {
                 })
             })
 
-            middleware.use(function(message, content) {
+            middleware.use(function(flowControl, message, content) {
                 download('library/978-3-16-148410-0.json', function(err, uploadedContent) {
                     assert.ifError(err)
                     assert.equal(uploadedContent.text, content.text)

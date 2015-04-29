@@ -40,18 +40,21 @@ describe('uploadToS3', function() {
 
     it('should report an unrecoverable error when s3id is not specified', function(done) {
 
+        var flowScope = {
+            qs3: {
+            }
+        }
+
         var message = {
             properties: {
                 headers: {
                 }
-            },
-            qs3: {
             }
         }
 
         uploadToS3(config, {}, function(err, middleware) {
             assert.ifError(err)
-            middleware(message, 'content', function(err) {
+            middleware(flowScope, message, 'content', function(err) {
                 assert.ok(err)
                 assert.equal(err.message, 'An s3 id is required')
                 assert.ok(!err.recoverable)
@@ -62,13 +65,16 @@ describe('uploadToS3', function() {
 
     it('should report a recoverable error when the message cannot be uploaded', function(done) {
 
+        var flowScope = {
+            qs3: {
+                s3id: getS3Id(this.test)
+            }
+        }
+
         var message = {
             properties: {
                 headers: {
                 }
-            },
-            qs3: {
-                s3id: getS3Id(this.test)
             },
             content: crypto.pseudoRandomBytes(10).toString('hex')
         }
@@ -78,7 +84,7 @@ describe('uploadToS3', function() {
             region: 'eu-west-1'
         }, {}, function(err, middleware) {
             assert.ifError(err)
-            middleware(message, 'content', function(err) {
+            middleware(flowScope, message, 'content', function(err) {
                 assert.ok(err)
                 assert.equal(err.message, 'The specified bucket does not exist')
                 assert.ok(err.recoverable)
@@ -88,6 +94,13 @@ describe('uploadToS3', function() {
     })
 
     it('should upload message to s3', function(done) {
+
+        var flowScope = {
+            qs3: {
+                s3id: getS3Id(this.test)
+            }
+        }
+
         var message = {
             properties: {
                 headers: {
@@ -95,19 +108,16 @@ describe('uploadToS3', function() {
                 },
                 contentType: 'text/plain'
             },
-            qs3: {
-                s3id: getS3Id(this.test)
-            },
             content: crypto.pseudoRandomBytes(10).toString('hex')
         }
 
         uploadToS3(config, {}, function(err, middleware) {
             assert.ifError(err)
-            middleware(message, 'content', function(err) {
+            middleware(flowScope, message, 'content', function(err) {
                 assert.ifError(err)
                 s3.getClient(config.region).getObject({
                     Bucket: config.bucket,
-                    Key: message.qs3.s3id
+                    Key: flowScope.qs3.s3id
                 }, function(err, res) {
                     assert.ifError(err)
                     assert.equal(res.ContentDisposition, 'attachment; filename=foo.txt')
