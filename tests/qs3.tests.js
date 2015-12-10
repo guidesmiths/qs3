@@ -39,6 +39,60 @@ describe('qs3', function() {
         emptyBucket(done)
     })
 
+    it('should upload message headers to s3 server', function(done) {
+
+        var middleware = ware()
+        var content = {
+            text: crypto.pseudoRandomBytes(10).toString('hex')
+        }
+
+        broker.publish('p1', content, {
+            routingKey: 'library.v1.book.978-3-16-148410-0.loan.created',
+            options: {
+                headers: {
+                    'x-test': 'foo'
+                }
+            }
+        }, function(err, publication) {
+            assert.ifError(err)
+
+            broker.subscribe('s1', function(err, subscription) {
+                subscription.on('message', function(message, content) {
+                    middleware.run({}, message, content, function(err) {
+                        assert.ifError(err)
+                    })
+                })
+            })
+
+            qs3.init(config.qs3.routes.book_loan_v1_with_headers, {}, function(err, warez) {
+                assert.ifError(err)
+                _.each(warez, function(ware) {
+                    middleware.use(ware)
+                })
+            })
+
+            middleware.use(function(flowScope, message, content) {
+
+                async.parallel([
+                    function(cb) {
+                        download(format('library/v1/book/978-3-16-148410-0/loan/created/%s_headers.json', message.properties.messageId), function(err, uploadedContent) {
+                            assert.ifError(err)
+                            assert.equal('foo', uploadedContent.properties.headers['x-test'])
+                            cb()
+                        })
+                    },
+                    function(cb) {
+                        download(format('library/v1/book/978-3-16-148410-0/loan/created/%s.json', message.properties.messageId), function(err, uploadedContent) {
+                            assert.ifError(err)
+                            assert.equal(uploadedContent.text, content.text)
+                            cb()
+                        })
+                    }
+                ], done)
+            })
+        })
+    })
+
     it('should upload message content to s3 server', function(done) {
 
         var middleware = ware()

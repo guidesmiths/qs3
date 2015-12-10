@@ -17,6 +17,37 @@
                     }
                 }
             },
+            "book_loan_v1_with_headers": {
+                "sequence": ["messageToTemplateVars", "routingKeyToPath", "messageToHeadersS3Id", "uploadHeadersToS3", "messageToContentS3Id", "uploadContentToS3"],
+                "warez": {
+                    "messageToHeadersS3Id": {
+                        "type": "messageToS3Id",
+                        "options": {
+                            "template": "{{path}}/{{message.properties.messageId}}_headers.json"
+                        }
+                    },
+                    "uploadHeadersToS3": {
+                        "type": "uploadHeadersToS3",
+                        "options": {
+                            "region": "eu-west-1",
+                            "bucket": "qs3-tests"
+                        }
+                    },
+                    "messageToContentS3Id": {
+                        "type": "messageToS3Id",
+                        "options": {
+                            "template": "{{path}}/{{message.properties.messageId}}.json"
+                        }
+                    },
+                    "uploadContentToS3": {
+                        "type": "uploadToS3",
+                        "options": {
+                            "region": "eu-west-1",
+                            "bucket": "qs3-tests"
+                        }
+                    }
+                }
+            },
             "book_loan_v2": {
                 "sequence": ["messageToTemplateVars", "messageTimestampToTemplateVars", "messageToS3Id", "uploadToS3"],
                 "warez": {
